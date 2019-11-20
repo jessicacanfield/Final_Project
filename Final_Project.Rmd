@@ -95,6 +95,9 @@ nba <- import(here("Data", "NBA.xlsx")) %>%
   rename(home_wins = home_win) %>% 
   as_tibble()
 
+nba <- nba %>% mutate(capacity = as.numeric(capacity), attend_tot = as.numeric(attend_tot), attend_avg = as.numeric(attend_avg), games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
+
+
 ncaaf <- import(here("Data", "NCAAF.xlsx")) %>%
   characterize() %>%  
   clean_names() %>% 
@@ -107,19 +110,22 @@ nfl <- import(here("Data", "NFL.xlsx")) %>%
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
   as_tibble()
 
+nfl <- nfl %>% mutate(attend_tot = as.numeric(attend_tot),  attend_avg = as.numeric(attend_avg),games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
+
 nhl <- import(here("Data", "NHL.xlsx")) %>%
   characterize() %>%  
   clean_names()%>% 
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
   as_tibble() 
 
+nhl <- nhl %>% mutate(attend_tot = as.numeric(attend_tot), attend_avg = as.numeric(attend_avg), games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
 
 sports <- bind_rows(mlb, nba, ncaaf, nfl, nhl) %>% as_tibble()
 
 ```
 
 
-```{r}
+```{r tidy}
 sports_rev <- sports %>%
   drop_na() %>%
   filter(year >= 2010) %>%
@@ -139,9 +145,19 @@ sports_rev %>%
   geom_smooth(se = FALSE) 
 ```
 
+```{r pivot}
+sports_pivot <- sports %>%
+  pivot_longer(home_wins, names_to = c("home", "wins"), names_sep = "_", values_to = "victory") %>%
+  pivot_wider(names_from = wins, values_from = victory) %>%
+  select(-c(9)) %>%
+  rename(home_wins = wins)
+
+```
+
+
 ## Requirements 
-1. pivot_longer:
-2. pivot_wider: 
+1. pivot_longer: Done
+2. pivot_wider: Done 
 3. group_by: Done
 4. summarize: Done
 5. filter: Done
