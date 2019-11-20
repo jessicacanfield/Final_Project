@@ -81,9 +81,12 @@ mlb <- import(here("Data", "MLB.xlsx")) %>%
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
   as_tibble()
 
-mlb <- mlb %>% mutate(capacity = as.numeric(capacity), attend_tot = as.numeric(attend_tot), attend_avg = as.numeric(attend_avg), games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
+mlb <- mlb %>% mutate(capacity = numeric(capacity))
 
+is.character(mlb$capacity) 
+```
 
+```{r}
 nba <- import(here("Data", "NBA.xlsx")) %>%
   characterize() %>%  
   clean_names()%>% 
@@ -92,33 +95,23 @@ nba <- import(here("Data", "NBA.xlsx")) %>%
   rename(home_wins = home_win) %>% 
   as_tibble()
 
-
-nba <- nba %>% mutate(capacity = as.numeric(capacity), attend_tot = as.numeric(attend_tot), attend_avg = as.numeric(attend_avg), games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
-
 ncaaf <- import(here("Data", "NCAAF.xlsx")) %>%
   characterize() %>%  
   clean_names() %>% 
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
   as_tibble()
 
-
 nfl <- import(here("Data", "NFL.xlsx")) %>%
   characterize() %>%  
   clean_names()%>% 
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
-as_tibble() 
-
-nfl <- nfl %>% mutate(attend_tot = as.numeric(attend_tot),  attend_avg = as.numeric(attend_avg),games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
-
+  as_tibble()
 
 nhl <- import(here("Data", "NHL.xlsx")) %>%
   characterize() %>%  
   clean_names()%>% 
   select(sport, team, year, capacity, attend_tot, attend_avg, games, ticket_price, home_wins) %>% 
   as_tibble() 
-
-
-nhl <- nhl %>% mutate(attend_tot = as.numeric(attend_tot), attend_avg = as.numeric(attend_avg), games = as.numeric(games), ticket_price = as.numeric(ticket_price), home_wins = as.numeric(home_wins))
 
 
 sports <- bind_rows(mlb, nba, ncaaf, nfl, nhl) %>% as_tibble()
